@@ -120,6 +120,7 @@ class Book(LibraryWrapper):
         if not resp.ok or len(q('.msg')):
             raise LibraryNotFoundError
 
+        # FIXME 搜索结果是分页的
         results = parse_results(q)
 
         if verbose:
