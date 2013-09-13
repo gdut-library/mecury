@@ -1,17 +1,26 @@
 #coding: utf-8
 
+import re
 from setuptools import setup
-
-import api
 from email.utils import parseaddr
-author, author_email = parseaddr(api.__author__)
+
+
+declaration = open('api/__init__.py').read()
+
+
+def grep(item):
+    pattern = re.compile('__%s__ = \'(.*)\'' % item)
+    return pattern.findall(declaration)[0]
+
+author, author_email = parseaddr(grep('author'))
+
 
 setup(
     name='GDUT Library API',
-    version=api.__version__,
+    version=grep('version'),
     author=author,
     author_email=author_email,
-    url=api.__homepage__,
+    url=grep('homepage'),
     description='Provide a programmable API for GDUT library.',
     long_description=open('README.mkd').read(),
     license='BSD',
