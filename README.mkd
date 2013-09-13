@@ -41,7 +41,6 @@
 1. virtualenv
 
 ```shell
-
 $ virtualenv .
 $ source bin/activate
 $ pip install -r requirements.txt
@@ -50,7 +49,6 @@ $ pip install -r requirements.txt
 1. 运行测试
 
 ```shell
-
 $ nosetests
 .........
 ----------------------------------------------------------------------
