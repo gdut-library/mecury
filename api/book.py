@@ -6,6 +6,8 @@ from pyquery import PyQuery as PQ
 
 from .library import LibraryWrapper, LibraryNotFoundError
 
+__all__ = ['Book']
+
 
 class Book(LibraryWrapper):
     '''馆藏信息接口'''
@@ -15,10 +17,10 @@ class Book(LibraryWrapper):
 
         书籍信息包括：
 
-        - 书籍名称
-        - 书籍 ISBN 码
-        - 书籍系统控制号
-        - 书籍馆藏信息
+        - 书籍名称 name
+        - 书籍 ISBN 码 isbn
+        - 书籍系统控制号 ctrlno
+        - 书籍馆藏信息 locations
 
         如果书籍没有找到，抛出 `LibraryNotFoundError`
 
@@ -38,7 +40,7 @@ class Book(LibraryWrapper):
                 return match[0].replace('-', '')
 
         def parse_ctrlno(pq):
-            return ctrlno
+            return str(ctrlno)
 
         def parse_locations(pq):
             locations = []
@@ -84,7 +86,7 @@ class Book(LibraryWrapper):
         - 馆藏位置 location
         - 馆藏数量 total
         - 馆藏剩余量 available
-        - 详细书籍信息 detail （如果 `verbose` 为真）
+        - 详细书籍信息 details （如果 `verbose` 为真）
 
         如果没有找到任何搜索结果，抛出 `LibraryNotFoundError`
 
@@ -98,16 +100,18 @@ class Book(LibraryWrapper):
                 td = PQ(tr)('td')
                 results.append({
                     'name': PQ(td[1]).text().strip(),
-                    'ctrlno': PQ(td[0]).attr('value'),
+                    'ctrlno': PQ('input', td[0]).attr('value'),
                     'author': PQ(td[2]).text().strip(),
                     'publisher': PQ(td[3]).text().strip(),
                     'location': PQ(td[5]).text().strip(),
-                    'total': PQ(td[6]).text().strip(),
-                    'available': PQ(td[7]).text().strip()
+                    'total': int(PQ(td[6]).text().strip()),
+                    'available': int(PQ(td[7]).text().strip())
                 })
             return results
 
         dest = self._build_url('/searchresult.aspx')
+
+        # 查询关键字编码要为 gb2312
         params = {'anywords': q.encode('gbk')}
 
         resp = requests.get(dest, params=params)
@@ -120,6 +124,6 @@ class Book(LibraryWrapper):
 
         if verbose:
             for i in results:
-                i['results'] = self.get(i['ctrlno'])
+                i['details'] = self.get(i['ctrlno'])
 
         return results
