@@ -15,18 +15,19 @@ from config import (
 
 class WrapperTestCase(unittest.TestCase):
 
-    def testLogin(self):
-        library = LibraryAuthWrapper()
+    def setUp(self):
+        self.library = LibraryAuthWrapper()
 
-        self.assertTrue('sulcmiswebpac' in library.login(USERNAME, PASSWORD))
-        self.assertRaises(LibraryLoginError, library.login, USERNAME, '12345')
-        self.assertRaises(LibraryChangePasswordError, library.login,
+    def testLogin(self):
+        self.assertTrue('sulcmiswebpac' in
+                        self.library.login(USERNAME, PASSWORD))
+        self.assertRaises(LibraryLoginError, self.library.login,
+                          USERNAME, '12345')
+        self.assertRaises(LibraryChangePasswordError, self.library.login,
                           UNACTIVATE_USERNAME, UNACTIVATE_PASSWORD)
 
-        token = library.login(USERNAME, PASSWORD)['sulcmiswebpac']
-        self.assertTrue(library.check_login(token))
-        self.assertFalse(library.check_login('12345'))
+    def testCheckLogin(self):
 
-
-if __name__ == '__main__':
-    unittest.main()
+        token = self.library.login(USERNAME, PASSWORD)['sulcmiswebpac']
+        self.assertTrue(self.library.check_login(token))
+        self.assertFalse(self.library.check_login('12345'))
