@@ -4,6 +4,25 @@
 USERNAME = ''
 PASSWORD = ''
 
+# 用户信息
+USERINFOS = {
+    'cardno': '',
+    'name': u'',
+    'faculty': u'',
+    'major': u'',
+    'reader_type': u'',
+    'reader_status': u''
+}
+
+# 用户书籍信息
+BOOKINFOS = {
+    'borrowed': 11,
+    'renewable': 2,
+    'requested': 1,
+    'total_borrowed': 53,
+    'total_recommened': 23
+}
+
 # 未激活帐号的用户名和密码
 UNACTIVATE_USERNAME = '3112005821'
 UNACTIVATE_PASSWORD = '3112005821'
