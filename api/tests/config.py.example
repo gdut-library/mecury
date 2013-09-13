@@ -1,0 +1,9 @@
+#coding: utf-8
+
+# 正确的用户名和密码
+USERNAME = ''
+PASSWORD = ''
+
+# 未激活帐号的用户名和密码
+UNACTIVATE_USERNAME = '3112005821'
+UNACTIVATE_PASSWORD = '3112005821'
