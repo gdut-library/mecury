@@ -1,0 +1,60 @@
+# GDUT Library API
+
+### 全国[第三漂亮](http://daxue.163.com/11/1115/16/7ITQV90H00913JC5_all.html)的图书馆好书还是挺多的哦！
+
+[WIP] 为[广工图书馆](http://222.200.98.171:81/)提供 API 接口支持。
+
+
+## 支持 API
+
+- me (需要进行[用户认证](#用户认证))
+    * personal    获取个人信息
+    * borrowed    获取当前借出图书信息
+    * requested   获取用户预约书籍列表
+    * history     获取用户借书历史记录
+    * recommended 获取用户荐购记录
+
+- book
+    * get     根据书籍控制码获取书籍信息
+    * search  任意关键字搜索书籍
+
+
+## 用户认证
+
+获取用户相关的信息时，需要先进行认证（a.k.a 登录）。
+
+登录方法如下：
+
+```python
+>>> from api import Me
+>>> me = Me()
+>>> cookies = me.login('my_library_account_number', 'my_library_account_pwd')
+>>> cookies
+{'sulcmiswebpac': 'blah_blah_this_is_your_login_token'}
+>>> borrowed = me.borrowed(token=cookies['sulcmiswebpac'])
+>>> print borrowed[0]['name']
+离散数学及其应用 [专著]
+```
+
+## 开发环境配置
+
+1. virtualenv
+
+```shell
+
+$ virtualenv .
+$ source bin/activate
+$ pip install -r requirements.txt
+```
+
+1. 运行测试
+
+```shell
+
+$ nosetests
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 7.836s
+
+OK
+```
