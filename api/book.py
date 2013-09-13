@@ -4,7 +4,7 @@ import re
 import requests
 from pyquery import PyQuery as PQ
 
-from .library import LibraryWrapper, LibraryNotFoundError
+from .library import LibraryWrapper, LibraryNotFoundError, LibraryNetworkError
 
 __all__ = ['Book']
 
@@ -74,7 +74,7 @@ class Book(LibraryWrapper):
         except TypeError:
             raise LibraryNotFoundError
 
-    def search(self, q, verbose=False):
+    def search(self, q, verbose=False, limit=0):
         '''搜索图书馆，返回搜索列表。
 
         搜索列表每个项目包含：
@@ -92,9 +92,14 @@ class Book(LibraryWrapper):
 
         :param q: 查询关键字
         :param verbose: 是否返回详细的书籍信息
+        :param limit: 限制返回长度, 0 为不限制
         '''
 
         def parse_results(pq):
+            current_page = int(pq(
+                '#ctl00_ContentPlaceHolder1_dplblfl2').text())
+            total_page = int(pq('#ctl00_ContentPlaceHolder1_gplblfl2').text())
+
             results = []
             for tr in pq('table tbody tr'):
                 td = PQ(tr)('td')
@@ -107,24 +112,43 @@ class Book(LibraryWrapper):
                     'total': int(PQ(td[6]).text().strip()),
                     'available': int(PQ(td[7]).text().strip())
                 })
-            return results
+            return results, current_page < total_page
 
         dest = self._build_url('/searchresult.aspx')
 
         # 查询关键字编码要为 gb2312
-        params = {'anywords': q.encode('gbk')}
+        params = {
+            'anywords': q.encode('gbk'),
+            'page': 1,
+            # 单页显示数目
+            'dp': 50
+        }
 
-        resp = requests.get(dest, params=params)
-        q = PQ(resp.text)
+        records = []
+        while True:
+            resp = requests.get(dest, params=params)
+            q = PQ(resp.text)
 
-        if not resp.ok or len(q('.msg')):
+            if not resp.ok:
+                raise LibraryNetworkError
+            if len(q('.msg')):
+                raise LibraryNotFoundError
+
+            record, has_next = parse_results(q)
+            records = records + record
+
+            if not has_next or (len(records) >= limit and limit > 0):
+                break
+            params['page'] = params['page'] + 1
+
+        if not len(records):
             raise LibraryNotFoundError
 
-        # FIXME 搜索结果是分页的
-        results = parse_results(q)
+        if limit != 0:
+            records = records[0:limit]
 
         if verbose:
-            for i in results:
+            for i in records:
                 i['details'] = self.get(i['ctrlno'])
 
-        return results
+        return records
