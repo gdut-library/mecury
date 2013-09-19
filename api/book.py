@@ -1,10 +1,11 @@
 #coding: utf-8
 
 import re
-import requests
 from pyquery import PyQuery as PQ
 
-from .library import LibraryWrapper, LibraryNotFoundError, LibraryNetworkError
+from .utils import requests
+from .library import LibraryWrapper
+from .exceptions import LibraryNotFoundError, LibraryNetworkError
 
 __all__ = ['Book']
 

@@ -3,12 +3,12 @@
 import re
 from datetime import datetime
 from functools import update_wrapper
-import requests
 from pyquery import PyQuery as PQ
 
 from .base import DATETIMEFMT
-from .library import (
-    LibraryAuthWrapper,
+from .utils import requests
+from .library import LibraryAuthWrapper
+from .exceptions import (
     LibraryLoginRequired, LibraryNotFoundError, LibraryNetworkError
 )
 
