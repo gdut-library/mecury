@@ -1,0 +1,8 @@
+## 0.0.2
+
+特性：
+
+- 提供 requests proxy, 将 requests 的所有网络异常捕捉, 并用 `LibraryNetworkError`
+  代替
+
+- 将所有异常移到 `api.exceptions` 下
