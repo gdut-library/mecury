@@ -26,7 +26,6 @@ class BookTestCase(unittest.TestCase):
         books_info = self.book.search(u'计算机', verbose=True, limit=13)
 
         self.assertEqual(len(books_info), 13)
-        self.assertEqual(books_info[0]['ctrlno'], '618785')
         self.assertEqual(books_info[1]['total'], 4)
         self.assertEqual(books_info[2]['available'], 0)
         self.assertEqual(books_info[0]['details'],

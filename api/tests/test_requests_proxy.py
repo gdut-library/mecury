@@ -3,7 +3,7 @@
 import unittest
 
 from api.utils import requests
-from api.library import LibraryNetworkError
+from api.exceptions import LibraryNetworkError
 
 
 class RequestsProxyTestCase(unittest.TestCase):
