@@ -26,10 +26,10 @@ class BookTestCase(unittest.TestCase):
         books_info = self.book.search(u'计算机', verbose=True, limit=13)
 
         self.assertEqual(len(books_info), 13)
-        self.assertEqual(books_info[1]['total'], 3)
-        self.assertEqual(books_info[2]['available'], 0)
-        self.assertEqual(books_info[0]['details'],
-                         self.book.get(books_info[0]['ctrlno']))
 
         self.assertRaises(LibraryNotFoundError, self.book.search,
                           'gdut library wrapper')
+
+    def testSearchUnicode(self):
+        self.assertRaises(LibraryNotFoundError, self.book.search,
+                          u'ノ・ゾ・キ・ア・ナ')

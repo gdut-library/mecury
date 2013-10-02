@@ -118,8 +118,14 @@ class Book(LibraryWrapper):
         dest = self._build_url('/searchresult.aspx')
 
         # 查询关键字编码要为 gb2312
+        try:
+            # 一些字体不能被转换到 gbk
+            anywords = q.replace(u'・', '').encode('gbk')
+        except UnicodeEncodeError:
+            # 直接使用 utf8 字体
+            anywords = q
         params = {
-            'anywords': q.encode('gbk'),
+            'anywords': anywords,
             'page': 1,
             # 单页显示数目
             'dp': 50
