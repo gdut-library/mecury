@@ -22,12 +22,11 @@ class WrapperTestCase(unittest.TestCase):
         self.assertTrue('sulcmiswebpac' in
                         self.library.login(USERNAME, PASSWORD))
         self.assertRaises(LibraryLoginError, self.library.login,
-                          USERNAME, '12345')
+                          USERNAME, 'this_cannot_be_my_pwd')
         self.assertRaises(LibraryChangePasswordError, self.library.login,
                           UNACTIVATE_USERNAME, UNACTIVATE_PASSWORD)
 
     def testCheckLogin(self):
-
         token = self.library.login(USERNAME, PASSWORD)['sulcmiswebpac']
         self.assertTrue(self.library.check_login(token))
         self.assertFalse(self.library.check_login('12345'))
