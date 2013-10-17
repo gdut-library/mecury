@@ -1,0 +1,4 @@
+# Tests
+
+假如想测试 `api.Me` 和 `api.LibraryAuthWrapper` 需要向 `config.py` 添加图书馆帐
+号的具体信息。
